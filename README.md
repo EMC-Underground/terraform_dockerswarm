@@ -1,1 +1,8 @@
-Terraform Deployment of Docker Hosts. Anisble playbook ansible_docker installs Docker and creates the swarm. 
+### Deploy Swarm Nodes using Terraform
+
+First create a `terraform.tfvars` file using the example as the template
+
+```shell
+terraform init
+terraform apply
+```
