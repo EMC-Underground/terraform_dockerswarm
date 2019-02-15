@@ -1,0 +1,7 @@
+root_password="rootpassword"
+vsphere_password="vspherepassword"
+vsphere_user="username"
+vsphere_server="vsphereipaddress"
+cluster_name="nameofcluster"
+datastore="datastorename"
+
