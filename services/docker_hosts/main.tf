@@ -1,6 +1,7 @@
 variable "servers"{}
 variable "datastore"{}
 variable "root_password"{}
+variable "cluster_name"{}
 
 data "vsphere_datacenter" "dc" {
   name = "PacLabs"
@@ -12,12 +13,12 @@ data "vsphere_datastore" "datastore" {
 }
 
 data "vsphere_compute_cluster" "cluster" {
-  name          = "SIODev"
+  name          = "${var.cluster_name}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_resource_pool" "pool" {
-  name          = "SIODev/Resources"
+  name          = "${var.cluster_name}/Resources"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 

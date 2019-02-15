@@ -8,6 +8,7 @@ provider "vsphere" {
 module "Docker_Hostvm"{
   source       = "services/docker_hosts"
   servers      = "${var.node_count}"
-  datastore    = "SIO_ds01"
+  datastore    = "${var.datastore}"
   root_password = "${var.root_password}"
+  cluster_name = "${var.cluster_name}"
 }
