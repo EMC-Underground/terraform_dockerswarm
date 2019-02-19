@@ -5,6 +5,15 @@ provider "vsphere" {
   allow_unverified_ssl = true
 }
 
+# Stores the terraform state file in S3 bucket.
+ terraform {
+  backend "s3" {
+    bucket = "brad.bucket"
+    key    = "dockerswarm/terraform.tfstate"
+    region = "us-east-1"
+	}
+}
+
 module "Docker_Hostvm"{
   source       = "services/docker_hosts"
   servers      = "${var.node_count}"
