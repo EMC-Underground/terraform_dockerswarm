@@ -43,7 +43,7 @@ data "vsphere_network" "sio_pg2" {
 }
 
 data "vsphere_virtual_machine" "template" {
-  name          = "SIODev_CentOS7_Template"
+  name          = "CentOSTemplate"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
