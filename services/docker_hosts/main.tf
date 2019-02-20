@@ -2,6 +2,11 @@ variable "servers"{}
 variable "datastore"{}
 variable "root_password"{}
 variable "cluster_name"{}
+variable "network_0"{}
+variable "network_1"{}
+variable "network_2"{}
+
+
 
 data "vsphere_datacenter" "dc" {
   name = "PacLabs"
@@ -23,17 +28,17 @@ data "vsphere_resource_pool" "pool" {
 }
 
 data "vsphere_network" "vlan344" {
-  name          = "siodev_pg_344"
+  name          = "${var.network_0}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_network" "sio_pg1" {
-  name          = "siodev_sio_pg1"
+  name          = "${var.network_1}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_network" "sio_pg2" {
-  name          = "siodev_sio_pg2"
+  name          = "${var.network_2}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
@@ -88,11 +93,11 @@ resource "vsphere_virtual_machine" "Docker_Hostvm" {
         ipv4_netmask = 24
       }
 
-      network_interface {
-      }
+       network_interface {
+       }
 
-      network_interface {
-      }
+       network_interface {
+       }
       ipv4_gateway = "10.237.198.1"
       dns_server_list = ["10.237.198.254", "10.201.16.29"]
       }

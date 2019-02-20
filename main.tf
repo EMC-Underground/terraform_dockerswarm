@@ -20,4 +20,7 @@ module "Docker_Hostvm"{
   datastore    = "${var.datastore}"
   root_password = "${var.root_password}"
   cluster_name = "${var.cluster_name}"
+  network_0    = "${var.network_0}"
+  network_1    = "${var.network_1}"
+  network_2    = "${var.network_2}"
 }

@@ -4,4 +4,6 @@ vsphere_user="username"
 vsphere_server="vsphereipaddress"
 cluster_name="nameofcluster"
 datastore="datastorename"
-
+network_0="pg_344"
+network_1="sio_pg1"
+network_2="sio_pg2"
