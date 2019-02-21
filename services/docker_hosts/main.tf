@@ -1,19 +1,9 @@
-variable "servers"{}
-variable "datastore"{}
-variable "root_password"{}
-variable "cluster_name"{}
-variable "network_0"{}
-variable "network_1"{}
-variable "network_2"{}
-
-
-
 data "vsphere_datacenter" "dc" {
-  name = "PacLabs"
+  name = "${var.datacenter_name}"
 }
 
 data "vsphere_datastore" "datastore" {
-  name = "${var.datastore}"
+  name          = "${var.datastore}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
@@ -27,7 +17,7 @@ data "vsphere_resource_pool" "pool" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
-data "vsphere_network" "vlan344" {
+data "vsphere_network" "mgmt_pg1" {
   name          = "${var.network_0}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
@@ -43,12 +33,12 @@ data "vsphere_network" "sio_pg2" {
 }
 
 data "vsphere_virtual_machine" "template" {
-  name          = "CentOSTemplate"
+  name          = "${var.template_name}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 resource "vsphere_virtual_machine" "Docker_Hostvm" {
-  count            = "${var.servers}"
+  count            = "${var.node_count}"
   name             = "terraform-DockerHost${count.index}"
   resource_pool_id = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
@@ -58,18 +48,18 @@ resource "vsphere_virtual_machine" "Docker_Hostvm" {
   scsi_type        = "${data.vsphere_virtual_machine.template.scsi_type}"
 
   network_interface {
-    network_id     = "${data.vsphere_network.vlan344.id}"
-    adapter_type   = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
+    network_id   = "${data.vsphere_network.mgmt_pg1.id}"
+    adapter_type = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
   }
 
   network_interface {
-    network_id     = "${data.vsphere_network.sio_pg1.id}"
-    adapter_type   = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
+    network_id   = "${data.vsphere_network.sio_pg1.id}"
+    adapter_type = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
   }
 
   network_interface {
-    network_id     = "${data.vsphere_network.sio_pg2.id}"
-    adapter_type   = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
+    network_id   = "${data.vsphere_network.sio_pg2.id}"
+    adapter_type = "${data.vsphere_virtual_machine.template.network_interface_types[0]}"
   }
 
   disk {
@@ -85,33 +75,31 @@ resource "vsphere_virtual_machine" "Docker_Hostvm" {
     customize {
       linux_options {
         host_name = "terraform-DockerHost${count.index}"
-        domain    = "paclabs.se.lab.emc.com"
+        domain    = "${var.domain}"
       }
 
-     network_interface {
-        ipv4_address = "10.237.198.19${count.index}"
-        ipv4_netmask = 24
+      network_interface {
+        ipv4_address = "${var.mgmt_ip_prefix}${count.index}"
+        ipv4_netmask = "${var.mgmt_netmask}"
       }
 
-       network_interface {
-       }
+      network_interface {}
 
-       network_interface {
-       }
-      ipv4_gateway = "10.237.198.1"
-      dns_server_list = ["10.237.198.254", "10.201.16.29"]
-      }
+      network_interface {}
 
-}
+      ipv4_gateway    = "${var.gateway}"
+      dns_server_list = "${var.dns_servers}"
+    }
+  }
 
   provisioner "file" {
     source      = "./authorized_keys"
     destination = "/root/.ssh/authorized_keys"
 
-  connection {
-    type     = "ssh"
-    user     = "root"
-    password = "${var.root_password}"
-}
-}
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = "${var.root_password}"
+    }
+  }
 }
