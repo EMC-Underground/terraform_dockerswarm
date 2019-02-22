@@ -39,7 +39,7 @@ data "vsphere_virtual_machine" "template" {
 
 resource "vsphere_virtual_machine" "Docker_Hostvm" {
   count            = "${var.node_count}"
-  name             = "terraform-DockerHost${count.index}"
+  name             = "${var.vm_name_prefix}${count.index}"
   resource_pool_id = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
   num_cpus         = 2
@@ -74,7 +74,7 @@ resource "vsphere_virtual_machine" "Docker_Hostvm" {
 
     customize {
       linux_options {
-        host_name = "terraform-DockerHost${count.index}"
+        host_name = "${var.vm_name_prefix}${count.index}"
         domain    = "${var.domain}"
       }
 
