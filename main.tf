@@ -6,13 +6,13 @@ provider "vsphere" {
 }
 
 # Stores the terraform state file in S3 bucket.
-#terraform {
-#  backend "s3" {
-#    bucket = "brad.bucket"
-#    key    = "dockerswarm/terraform.tfstate"
-#    region = "us-east-1"
-#  }
-#}
+# terraform {
+#   backend "s3" {
+#     bucket = "brad.bucket"
+#     key    = "dockerswarm/terraform.tfstate"
+#     region = "us-east-1"
+#   }
+# }
 
 module "swarm" {
   source = "./services/docker_hosts"
