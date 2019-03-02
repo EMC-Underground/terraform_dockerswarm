@@ -27,3 +27,4 @@ override.tf.json
 /.blackbox/pubring.gpg~
 /.blackbox/pubring.kbx~
 /.blackbox/secring.gpg
+/terraform.tfvars
