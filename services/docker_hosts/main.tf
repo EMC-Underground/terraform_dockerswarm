@@ -98,6 +98,7 @@ resource "vsphere_virtual_machine" "Docker_Hostvm" {
 
     connection {
       type     = "ssh"
+      host     = "${self.default_ip_address}"
       user     = "root"
       password = "${var.root_password}"
     }
